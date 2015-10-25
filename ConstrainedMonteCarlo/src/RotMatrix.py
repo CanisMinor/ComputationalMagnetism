@@ -8,8 +8,8 @@ import numpy as np
 def RotMatrix(theta, phi):
 
     #initialise matrices
-    rot = np.zeros(3,3)
-    irot = np.zeros(3,3)
+    rot = np.zeros((3,3))
+    irot = np.zeros((3,3))
     mz_unit = np.zeros(3)
 
     #convert angles to radians
@@ -42,10 +42,9 @@ def RotMatrix(theta, phi):
     rot[2,2]=cosp
 
     print("rotation matrix: " + '\n')
-    print(rot[0,0] + ' ' + rot[0,1] + ' ' + rot[0,2] + '\n')
-    print(rot[1,0] + ' ' + rot[1,1] + ' ' + rot[1,2] + '\n')
-    print(rot[2,0] + ' ' + rot[2,1] + ' ' + rot[2,2] + '\n')
-
+    print(str(rot[0,0]) + ' ' + str(rot[0,1]) + ' ' + str(rot[0,2]) + '\n')
+    print(str(rot[1,0]) + ' ' + str(rot[1,1]) + ' ' + str(rot[1,2]) + '\n')
+    print(str(rot[2,0]) + ' ' + str(rot[2,1]) + ' ' + str(rot[2,2]) + '\n')
 
     #inverse rotation matrix
     irot[0,0]=cost*cosp
@@ -59,8 +58,8 @@ def RotMatrix(theta, phi):
     irot[2,2]=cosp
 
     print( "inverse rotation matrix: " + '\n')
-    print( irot[0,0] + ' ' + irot[0,1] + ' ' + irot[0,2] + '\n')
-    print( irot[1,0] + ' ' + irot[1,1] + ' ' + irot[1,2] + '\n')
-    print( irot[2,0] + ' ' + irot[2,1] + ' ' + irot[2,2] + '\n')
+    print(str(irot[0,0]) + ' ' + str(irot[0,1]) + ' ' + str(irot[0,2]) + '\n')
+    print(str(irot[1,0]) + ' ' + str(irot[1,1]) + ' ' + str(irot[1,2]) + '\n')
+    print(str(irot[2,0]) + ' ' + str(irot[2,1]) + ' ' + str(irot[2,2]) + '\n')
 
     return rot, irot, mz_unit

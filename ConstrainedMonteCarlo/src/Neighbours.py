@@ -7,13 +7,18 @@ def ReadNeighbours(neighbfile, list_length):
     site_i = np.zeros(list_length)
     site_j = np.zeros(list_length)
     Jij_no = np.zeros(list_length)
-    junk_stuff = np.zeros(list_length)
     
     with open(neighbfile, 'r') as nF:
+        j = 0
         for line in nF:
             k = 3
-            #read in step_i,step_j,neighbour no,tensor no
-            #neighbfile >> site_i[n_line] >> site_j[n_line] >> junk_stuff[n_line] >> Jij_no[n_line];
+            qLine = line.split()
+            site_i[j] = qLine[0]
+            site_j[j] = qLine[1]
+            #junk in third column
+            Jij_no[j] = qLine[3]
+            j = j + 1
+
 
     return site_i, site_j, Jij_no
 
