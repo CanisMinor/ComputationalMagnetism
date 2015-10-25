@@ -1,5 +1,5 @@
 #constrained Monte Carlo algorithm
-#Canis Minor  Joanna.Hill@writeme.com
+#Canis Minor
 #13th Dec 2011
 
 import numpy as np
