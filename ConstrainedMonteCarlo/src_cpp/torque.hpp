@@ -1,11 +1,6 @@
-//subroutines for operations on the exchange data
+#pragma once
 
-#ifndef ExchangeReadIn_h
-#define ExchangeReadIn_h
-
-int CountExch(const char *s);
-
-int ReadEffExch(const char *s, double Jij_array[][9], int inform[][5], double interat[], int n_interactions);
-
-
-#endif
+namespace constrained_monte_carlo
+{
+int ReadEffExch(std::string file_name, std::vector<std::array<double, 9>> Jij_array, std::vector<std::array<int, 5>> inform, std::vector<double> interat, int n_interactions);
+}

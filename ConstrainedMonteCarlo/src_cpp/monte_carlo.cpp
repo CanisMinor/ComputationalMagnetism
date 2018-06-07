@@ -21,7 +21,7 @@
 
 #include "randomc.h"
 #include "stocc.h"
-#include "Globals.h"
+#include "parameters.h"
 #include "RotMat.h"
 #include "ExchangeReadIn.h"
 #include "NeighbReadIn.h"
@@ -51,7 +51,7 @@ double generate_random_number(int a, int b)
     return distribution(generator);
 }
 
-int main()
+int monte_carlo()
 {
     // parameters for time- and temperature loops
     const int N_iter = 20000;  // no of time steps

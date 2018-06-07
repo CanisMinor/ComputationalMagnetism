@@ -1,8 +1,6 @@
-//neighbour-related functions
+#pragma once
 
-#ifndef NeighbReadIn_h
-#define NeighbReadIn_h
-
+namespace constrained_monte_carlo
+{
 int ReadNeighbours(const char *s, int list_length, int site_i[], int site_j[], int Jij_no[]);
-
-#endif
+}

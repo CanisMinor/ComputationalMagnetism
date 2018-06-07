@@ -1,9 +1,8 @@
+#pragma once
 
-#ifndef RotMat_h
-#define RotMat_h
+#include <array>
 
-
-int RotMatrix(double theta, double phi, double irot[3][3], double rot[3][3], double mz_unit[3]);
-
-
-#endif
+namespace constrained_monte_carlo
+{
+int RotMatrix(double theta, double phi, std::array<double, 9> irot, std::array<double, 9> rot, std::array<double, 3> mz_unit);
+}

@@ -1,54 +1,44 @@
-//subroutines for operations on the exchange data
-
 #include <iostream>
 #include <cmath>
 #include <cstdlib>
 #include <iomanip>
 #include <cstring>
+#include <array>
 #include <fstream>
+#include <vector>
+#include "parameters.h"
 
-using namespace std;
-
-#include "Globals.h"
-
-//count the number of exchange pairs listed in data file
-int CountExch(const char *s)
+namespace constrained_monte_carlo
 {
- cout << "counting no of interactions in file " << s << '\n';
-
- ifstream exchfile;   //exchfile is a variable of type "input file"
- exchfile.open(s);
- if(!exchfile) return 0;
-
- string junk;
- int ncount=-1;
- while ( !exchfile.eof() )
- {                                                                          
-    ncount++;                                                               
-    getline(exchfile, junk);
- }
- exchfile.close();
-
- return ncount;
-}
-
-
-
-//read in exchange tensors
-int ReadEffExch(const char *s, double Jij_array[][9], int inform[][5], double interat[], int n_interactions)
+int read_exchange_constants(std::string& file_name, std::vector<std::array<double, 9>>& Jij_array,
+                            std::vector<std::array<int, 5>>& information, std::vector<double>& inter_atomic,
+                            int n_interactions)
 {
- ifstream exch_templ;
- exch_templ.open(s);
- if(!exch_templ) cout << "effective exchange tensors could not be read in" << endl;
- 
- //read in exchange parameters and pairs info from KKR data
- for(int j=0; j<n_interactions; j++)
- {
-    exch_templ >> inform[j][0] >> inform[j][1] >> inform[j][2] >> inform[j][3] >> inform[j][4] >> interat[j] >> Jij_array[j][0] >> Jij_array[j][1] >> Jij_array[j][2] >> Jij_array[j][3] >> Jij_array[j][4] >> Jij_array[j][5] >> Jij_array[j][6] >> Jij_array[j][7] >> Jij_array[j][8]; 
- } 
+    std::ifstream exchange_constants_input(file_name.c_str());
+    if (!exchange_constants_input)
+    {
+        std::cout << "effective exchange tensors could not be read in" << std::endl;
+    }
 
+    // read in exchange parameters and pairs info from KKR data
+    std::string input_line;
+    while (std::getline(std::cin, input_line))
+    {
+        std::array<int, 5> information_line;
+        double interatomic_distance;
+        std::array<double, 9> Jij_array_line;
+        input_line >> information_line[0] >> information_line[1] >> information_line[2] >> information_line[3] >>
+            information_line[4] >> interatomic_distance >> Jij_array_line[0] >> Jij_array_line[1] >>
+            Jij_array_line[2] >> Jij_array_line[3] >> Jij_array_line[4] >> Jij_array_line[5] >> Jij_array_line[6] >>
+            Jij_array_line[7] >> Jij_array_line[8];
 
- exch_templ.close();
- return 0;
+        Jij_array.push_back(Jij_array_line);
+        inter_atomic.push_back(interatomic_distance);
+        information.push_back(information_line);
+    }
+
+    exchange_constants_input.close();
+
+    return 0;
 }
-
+}  // namespace constrained_monte_carlo

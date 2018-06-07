@@ -1,9 +1,9 @@
 #include <iostream>
 #include <cmath>
-#include "Globals.h"
+#include "parameters.h"
 
-std::array<double, 9> get_rotation_matrix(double theta, double phi, std::array<double, 9>& irot, 
-                                          std::array<double, 9>& rot, std::array<double, 3>& mz_unit)
+void get_rotation_matrix(double theta, double phi, std::array<double, 9>& irot, 
+                         std::array<double, 9>& rot, std::array<double, 3>& mz_unit)
 {
     // convert angles to radians
     const double half_turn_degrees = 180.0;
@@ -42,6 +42,4 @@ std::array<double, 9> get_rotation_matrix(double theta, double phi, std::array<d
     irot[6] = cost * sinp;
     irot[7] = sint * sinp;
     irot[8] = cosp;
-
-    return 0;
 }
