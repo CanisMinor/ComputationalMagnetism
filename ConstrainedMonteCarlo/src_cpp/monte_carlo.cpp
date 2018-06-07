@@ -37,6 +37,17 @@ using namespace std;
 
 namespace constrained_monte_carlo
 {
+void print_spin_configuration(std::vector<double> Sz)
+{
+    std::ofstream spin_structure("spin-configuration.dat");
+    for (int i_spin = 0; i_spin < N_s; ++i_spin)
+    {
+        spin_structure << i_spin << "\t" << Sz[i_spin] << endl;
+    }
+
+    spin_structure.close();
+}
+
 double generate_random_number(double a, double b)
 {
     static std::default_random_engine generator;
@@ -72,12 +83,9 @@ int monte_carlo()
         return 1;
     }
 
-    const int nFeFe = CountExch("effectiveJij.dat");
-    const int neigh_list_length = (nFeFe)*N_s;
-
-    std::vector<int> site_central[neigh_list_length];
-    std::vector<int> site_neighbour[neigh_list_length];
-    std::vector<int> Jijno[neigh_list_length];
+    std::vector<int> site_central;
+    std::vector<int> site_neighbour;
+    std::vector<int> Jijno;
 
     ReadNeighbours("FeFe_neighbours.dat", neigh_list_length, site_central, site_neighbour, Jijno);
 
@@ -122,9 +130,7 @@ int monte_carlo()
             mz = mz + ((Sx[j] * mz_unit[0]) + (Sy[j] * mz_unit[1]) + (Sz[j] * mz_unit[2]));
         }
 
-        /*----------------------!
-        !      TIME LOOP        !
-        !----------------------*/
+        // iterate over time
         double summa = 0.0;
         for (int i_time = 1; i_time <= N_iter; ++i_time)
         {
@@ -159,11 +165,8 @@ int monte_carlo()
                 spin_new[1] /= norm;
                 spin_new[2] /= norm;
 
-                /*------------------------!
-                ! CALCULATING OLD ENERGY  !
-                !------------------------*/
+                // calculate the old energy
                 double energy_old = 0.0;
-                // primary exchange; calculate exchange field by summing over contributions from each neighbour
                 double exch_energy_old = 0.0;
                 for (int k = 0; k < nFeFe; k++)
                 {
@@ -173,19 +176,15 @@ int monte_carlo()
                 }
 
                 energy_old -= exch_energy_old;
-
-                // primary Zeeman energy (old)
-                energy_old -= (H_app[0] * spin_old[0] + H_app[1] * spin_old[1] + H_app[2] * spin_old[2]);
-
-                // primary spin uniaxial anisotropy (old)
-                energy_old -= H_ani[2] * spin_old[2] * spin_old[2];
+                energy_old -= (H_app[0] * spin_old[0] + H_app[1] * spin_old[1] + H_app[2] * spin_old[2]);  // Zeeman energy
+                energy_old -= H_ani[2] * spin_old[2] * spin_old[2];  //uniaxial anisotropy energy
 
                 // move primary spin
                 Sx[nsp] = spin_new[0];
                 Sy[nsp] = spin_new[1];
                 Sz[nsp] = spin_new[2];
 
-                // new primary exchange; calculate exchange field by summing over contributions from each neighbour
+                // calculate new energy
                 double energy_new = 0.0;
                 double exch_energy_new = 0.0;
                 for (int k = 0; k < nFeFe; ++k)
@@ -204,20 +203,16 @@ int monte_carlo()
                 }
 
                 energy_new -= exch_energy_new;
-
-                // new primary Zeeman energy
-                energy_new -= ((H_app[0] * spin_new[0]) + (H_app[1] * spin_new[1]) + (H_app[2] * spin_new[2]));
-
-                // new primary uniaxial anisotropy
-                energy_new -= H_ani[2] * spin_new[2] * spin_new[2];
+                energy_new -= ((H_app[0] * spin_new[0]) + (H_app[1] * spin_new[1]) + (H_app[2] * spin_new[2]));   // Zeeman energy
+                energy_new -= H_ani[2] * spin_new[2] * spin_new[2];       // uniaxial anisotropy energy
 
                 // calculate total change in energy
-                double deltaE = energy_new - energy_old;
+                const double deltaE = energy_new - energy_old;
 
                 // calculate Boltzmann probability
                 const double max_probability = 1.00;
-                double pboltz = std::min(exp(-deltaE * beta_scaled), max_probability);
-                double prand = sto.Random();
+                const double pboltz = std::min(exp(-deltaE * beta_scaled), max_probability);
+                const double prand = sto.Random();
 
                 // if random no < Boltzmann prob, revert spins to original state
                 if (prand > pboltz)
@@ -268,16 +263,10 @@ int monte_carlo()
         magn_temp << temp << ", " << summa << ", " << M_tot << ", " << M_x << ", " << M_y << ", " << M_z << ", "
                   << M_z / N_s << ", " << mz / N_s << endl;
     }
+
     magn_temp.close();
 
-    ofstream spin_structure;
-    spin_structure.open("spin-configuration.dat");
-    for (int i_spin = 0; i_spin < N_s; ++i_spin)
-    {
-        spin_structure << i_spin << "\t" << Sz[i_spin] << endl;
-    }
-
-    spin_structure.close();
+    print_spin_configuration(Sz);
 
     return 0;
 }

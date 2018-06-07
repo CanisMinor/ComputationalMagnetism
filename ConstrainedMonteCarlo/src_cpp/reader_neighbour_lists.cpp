@@ -10,24 +10,22 @@
 
 using namespace std;
 
-int ReadNeighbours(const char* s, int list_length, int site_i[], int site_j[], int Jij_no[])
+void read_neighbour_list(const std::string& file_name, std::vector<int> site_i, std::vector<int> site_j, std::vector<int> Jij_no)
 {
-    cout << "reading in neighbours from neighbour list " << s << '\n';
-    ifstream neighbfile;
-    int junk_stuff[list_length];
-    neighbfile.open(s);
-    if (!neighbfile)
-    {
-        cout << "neighbour list couldn't be read in ReadNeighbours subroutine" << endl;
-    }
-
-    for (int n_line = 0; n_line < list_length; n_line++)
+    std::ifstream neighbour_file(file_name.c_str());
+    while (std::getline(neighbour_file, input_line))
     {
         // read in step_i,step_j,neighbour no,tensor no
-        neighbfile >> site_i[n_line] >> site_j[n_line] >> junk_stuff[n_line] >> Jij_no[n_line];
+        int site_i_val;
+        int site_j_val;
+        double junk_stuff;
+        int Jij_no_val;
+        input_line >> site_i_val >> site_j_val >> junk_stuff >> Jij_no_val;
+
+        site_i.push_back(site_i_val);
+        site_j.push_back(site_j_val);
+        Jij_no.push_back(Jij_no_val);
     }
 
-    neighbfile.close();
-
-    return 0;
+    neighbour_file.close();
 }
